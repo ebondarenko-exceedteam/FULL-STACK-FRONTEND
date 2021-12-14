@@ -25,11 +25,67 @@ const addNewRecording = () => {
     howMany: inputHowManyValue
   });
   resultSum += +inputHowManyValue;
-  // inputWhereValue = '';
-  // inputHowManyValue = '';
   inputWhere.value = '';
   inputHowMany.value = '';
-  console.log(recordingsArray);
+  render();
+}
+
+const changeRecording = (index) => {
+  resultSum -= Number(recordingsArray[index].howMany);
+  recordingsArray[index].where = inputWhereValue;
+  recordingsArray[index].howMany = inputHowManyValue;
+  resultSum += +inputHowManyValue;
+  inputWhere.value = '';
+  inputHowMany.value = '';
+  render();
+};
+
+const closeRecording = () => {
+  inputWhereValue = '';
+  inputHowManyValue = '';
+  render();
+}
+
+const editRecording = (index) => {
+  const { where, howMany } = recordingsArray[index];
+  const activeRecording = document.getElementById(`record_${index}`)
+  while (activeRecording.firstChild) {
+    activeRecording.removeChild(activeRecording.firstChild);
+  }
+
+  const editInputWhere = document.createElement('input');
+  editInputWhere.id = 'input_edit_where';
+  editInputWhere.type = 'text';
+  editInputWhere.value = where;
+  editInputWhere.addEventListener('change', changeInputWhere);
+  const editInputHowMany = document.createElement('input');
+  editInputHowMany.id = 'input_edit_how_many';
+  editInputHowMany.type = 'number';
+  editInputHowMany.value = howMany;
+  editInputHowMany.addEventListener('change', changeinputHowMany);
+  const editBtnDiv = document.createElement('div');
+  editBtnDiv.className = 'edit_btn_div';
+  const editBtnEdit = document.createElement('img');
+  editBtnEdit.src = 'img/done.svg';
+  editBtnEdit.addEventListener('click', () => {
+    changeRecording(index);
+  })
+  const editBtnClose = document.createElement('img');
+  editBtnClose.src = 'img/close.svg';
+  editBtnClose.addEventListener('click', () => {
+    closeRecording();
+  })
+  editBtnDiv.appendChild(editBtnEdit);
+  editBtnDiv.appendChild(editBtnClose);
+  activeRecording.appendChild(editInputWhere);
+  activeRecording.appendChild(editInputHowMany);
+  activeRecording.appendChild(editBtnDiv);
+
+}
+
+const deleteRecording = (index) => {
+  resultSum -= Number(recordingsArray[index].howMany);
+  recordingsArray.splice(index, 1);
   render();
 }
 
@@ -53,10 +109,9 @@ const render = () => {
   resultBlock.appendChild(resultTitle);
   recordingsArray.forEach((item, index) => {
     const { where, howMany } = item;
-    
-    console.log(recordingBlock);
     const recordingDiv = document.createElement('div');
     recordingDiv.className = 'recording_div';
+    recordingDiv.id = `record_${index}`;
     const recordTitleWhere = document.createElement('p');
     recordTitleWhere.innerText = `${index + 1}) ${where}`;
     const recordTitleHowMany = document.createElement('p');
@@ -65,8 +120,14 @@ const render = () => {
     recordBtnDiv.className = 'record_btn_div';
     const recordBtnEdit = document.createElement('img');
     recordBtnEdit.src = 'img/edit.svg';
+    recordBtnEdit.addEventListener('click', () => {
+      editRecording(index);
+    })
     const recordBtnDel = document.createElement('img');
     recordBtnDel.src = 'img/back.svg';
+    recordBtnDel.addEventListener('click', () => {
+      deleteRecording(index);
+    })
     recordBtnDiv.appendChild(recordBtnEdit);
     recordBtnDiv.appendChild(recordBtnDel);
     recordingDiv.appendChild(recordTitleWhere);
