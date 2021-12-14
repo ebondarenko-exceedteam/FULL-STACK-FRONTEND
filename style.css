@@ -1,0 +1,31 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.wrapper {
+    background-color: #025665;
+}
+
+.content {
+    width: 90%;
+    margin: 0 auto;
+}
+
+h1 {
+    text-align: center;
+    color: white;
+}
+
+p {
+    color: white;
+}
+
+.inputs_block {
+    display: flex;
+    justify-content: space-around;
+}
+
+button {
+    background-color: #fc6733;
+}
