@@ -1,6 +1,7 @@
 let recordingsArray = [];
 let inputWhereValue = '';
 let inputHowManyValue = '';
+let inputDateValue = '';
 let resultSum = 0;
 let inputWhere = null;
 let inputHowMany = null;
@@ -53,7 +54,7 @@ const addNewRecording = async () => {
 }
 
 const changeRecording = async (index) => {
-  const { _id, where, howMany } = recordingsArray[index];
+  const { _id, howMany } = recordingsArray[index];
   const resp = await fetch ('http://localhost:8800/updateCharges', {
     method: 'PATCH',
     headers: {
@@ -125,6 +126,68 @@ const deleteRecording = async (index) => {
   render();
 }
 
+const newChangeInputWhere = async (event, index) => {
+  inputWhereValue = event.target.value;
+  const resp = await fetch ('http://localhost:8800/updateCharges', {
+    method: 'PATCH',
+    headers: {
+			"Content-Type": 'application/json; charset=utf-8',
+			'Access-Control-Allow-Origin': '*'
+		},
+    body: JSON.stringify({
+      _id: recordingsArray[index]._id,
+      where: inputWhereValue
+    })
+  });
+  const fetchResult = await resp.json();
+  recordingsArray = fetchResult.data;
+  render();
+};
+
+const newChangeInputDate = async (event, index) => {
+  inputDateValue = event.target.value;
+  const resp = await fetch ('http://localhost:8800/updateCharges', {
+    method: 'PATCH',
+    headers: {
+			"Content-Type": 'application/json; charset=utf-8',
+			'Access-Control-Allow-Origin': '*'
+		},
+    body: JSON.stringify({
+      _id: recordingsArray[index]._id,
+      date: inputDateValue
+    })
+  });
+  const fetchResult = await resp.json();
+  recordingsArray = fetchResult.data;
+  render();
+};
+
+const editTitleWhere = (index) => {
+  const recordingDiv = document.getElementById(`record_${index}`);
+  let recordTitleWhere = recordingDiv.firstChild;
+  const newInputEditWhere = document.createElement('input');
+  newInputEditWhere.id = 'new_input_edit_where';
+  newInputEditWhere.type = 'text';
+  newInputEditWhere.value = recordingsArray[index].where;
+  recordTitleWhere = recordingDiv.replaceChild(newInputEditWhere, recordTitleWhere);
+  newInputEditWhere.addEventListener('change', () => {
+    newChangeInputWhere(event, index);
+  })
+}
+
+const editTitleDate = (index) => {
+  const recordTitleBox = document.getElementById(`title_box_${index}`);
+  let recordTitleDate = recordTitleBox.firstChild;
+  const newInputEditDate = document.createElement('input');
+  newInputEditDate.id = 'new_input_edit_date';
+  newInputEditDate.id = 'new_input_edit_date';
+  newInputEditDate.value = recordingsArray[index].date;
+  recordTitleDate = recordTitleBox.replaceChild(newInputEditDate, recordTitleDate);
+  newInputEditDate.addEventListener('change', () => {
+    newChangeInputDate(event, index);
+  })
+}
+
 const render = () => {
   
   const resultBlock = document.querySelector('.result_block');
@@ -151,11 +214,18 @@ const render = () => {
     const recordTitleWhere = document.createElement('p');
     recordTitleWhere.className = 'record_title_where';
     recordTitleWhere.innerText = `${index + 1}) ${where}`;
+    recordTitleWhere.addEventListener('dblclick', () => {
+      editTitleWhere(index);
+    });
     const recordTitleBox = document.createElement('div');
     recordTitleBox.className = 'record_title_box';
+    recordTitleBox.id = `title_box_${index}`;
     const recordTitleDate = document.createElement('p');
     recordTitleDate.innerText = date;
     recordTitleDate.className = 'record_title_date';
+    recordTitleDate.addEventListener('dblclick', () => {
+      editTitleDate(index);
+    });
     const recordTitleHowMany = document.createElement('p');
     recordTitleHowMany.className = 'record_title_how_many';
     recordTitleHowMany.innerText = `${howMany} p.`;
