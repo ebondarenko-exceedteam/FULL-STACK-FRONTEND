@@ -20,9 +20,6 @@ window.onload = async () => {
   const resp = await fetch('http://localhost:8800/getAllCharges', { method: 'GET'});
   const fetchResult = await resp.json();
   recordingsArray = fetchResult.data;
-  recordingsArray.forEach(item => {
-    resultSum += item.howMany
-  })
   render();
 }
 
@@ -55,10 +52,23 @@ const addNewRecording = async () => {
   render();
 }
 
-const changeRecording = (index) => {
-  resultSum -= Number(recordingsArray[index].howMany);
-  recordingsArray[index].where = inputWhereValue;
-  recordingsArray[index].howMany = inputHowManyValue;
+const changeRecording = async (index) => {
+  const { _id, where, howMany } = recordingsArray[index];
+  const resp = await fetch ('http://localhost:8800/updateCharges', {
+    method: 'PATCH',
+    headers: {
+			"Content-Type": 'application/json; charset=utf-8',
+			'Access-Control-Allow-Origin': '*'
+		},
+    body: JSON.stringify({
+      _id,
+      where: inputWhereValue,
+      howMany: inputHowManyValue
+    })
+  });
+  const fetchResult = await resp.json();
+  recordingsArray = fetchResult.data;
+  resultSum -= Number(howMany);
   resultSum += +inputHowManyValue;
   inputWhere.value = '';
   inputHowMany.value = '';
@@ -108,9 +118,10 @@ const editRecording = (index) => {
 
 }
 
-const deleteRecording = (index) => {
-  resultSum -= Number(recordingsArray[index].howMany);
-  recordingsArray.splice(index, 1);
+const deleteRecording = async (index) => {
+  const resp = await fetch(`http://localhost:8800/deleteCharges?_id=${recordingsArray[index]._id}`, { method: 'DELETE'});
+  const fetchResult = await resp.json();
+  recordingsArray = fetchResult.data;
   render();
 }
 
@@ -126,6 +137,10 @@ const render = () => {
   }
   const resultTitle = document.createElement('p');
   resultTitle.className = 'result_title';
+  resultSum = 0;
+  recordingsArray.forEach(item => {
+    resultSum += item.howMany
+  })
   resultTitle.innerText = `Итого: ${resultSum} р.`;
   resultBlock.appendChild(resultTitle);
   recordingsArray.forEach((item, index) => {
