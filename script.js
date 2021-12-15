@@ -1,15 +1,30 @@
-const recordingsArray = [];
+let recordingsArray = [];
 let inputWhereValue = '';
 let inputHowManyValue = '';
 let resultSum = 0;
+let inputWhere = null;
+let inputHowMany = null;
 let today = new Date();
 let dd = String(today.getDate()).padStart(2, '0');
-let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+let mm = String(today.getMonth() + 1).padStart(2, '0');
 let yyyy = today.getFullYear();
 today = `${dd}.${mm}.${yyyy}`;
-const inputWhere = document.getElementById('input_where');
-const inputHowMany = document.getElementById('input_how_many');
-const button = document.querySelector('button');
+
+window.onload = async () => {
+  inputWhere = document.getElementById('input_where');
+  inputHowMany = document.getElementById('input_how_many');
+  const button = document.querySelector('button');
+  inputWhere.addEventListener('change', changeInputWhere);
+  inputHowMany.addEventListener('change', changeinputHowMany);
+  button.addEventListener('click', addNewRecording);
+  const resp = await fetch('http://localhost:8800/getAllCharges', { method: 'GET'});
+  const fetchResult = await resp.json();
+  recordingsArray = fetchResult.data;
+  recordingsArray.forEach(item => {
+    resultSum += item.howMany
+  })
+  render();
+}
 
 const changeInputWhere = (event) => {
   inputWhereValue = event.target.value;
@@ -19,11 +34,21 @@ const changeinputHowMany = (event) => {
   inputHowManyValue = event.target.value;
 }
 
-const addNewRecording = () => {
-  recordingsArray.push({
-    where: inputWhereValue,
-    howMany: inputHowManyValue
+const addNewRecording = async () => {
+  const resp = await fetch('http://localhost:8800/addedCharges', {
+    method: 'POST',
+    headers: {
+			"Content-Type": 'application/json; charset=utf-8',
+			'Access-Control-Allow-Origin': '*'
+		},
+    body: JSON.stringify({
+      date: today,
+      where: inputWhereValue,
+      howMany: +inputHowManyValue
+    })
   });
+  const fetchResult = await resp.json();
+  recordingsArray = fetchResult.data;
   resultSum += +inputHowManyValue;
   inputWhere.value = '';
   inputHowMany.value = '';
@@ -89,10 +114,6 @@ const deleteRecording = (index) => {
   render();
 }
 
-inputWhere.addEventListener('change', changeInputWhere);
-inputHowMany.addEventListener('change', changeinputHowMany);
-button.addEventListener('click', addNewRecording);
-
 const render = () => {
   
   const resultBlock = document.querySelector('.result_block');
@@ -108,14 +129,14 @@ const render = () => {
   resultTitle.innerText = `Итого: ${resultSum} р.`;
   resultBlock.appendChild(resultTitle);
   recordingsArray.forEach((item, index) => {
-    const { where, howMany } = item;
+    const { date, where, howMany } = item;
     const recordingDiv = document.createElement('div');
     recordingDiv.className = 'recording_div';
     recordingDiv.id = `record_${index}`;
     const recordTitleWhere = document.createElement('p');
     recordTitleWhere.innerText = `${index + 1}) ${where}`;
     const recordTitleHowMany = document.createElement('p');
-    recordTitleHowMany.innerText = `${today} ${howMany} p.`;
+    recordTitleHowMany.innerText = `${date} ${howMany} p.`;
     const recordBtnDiv = document.createElement('div');
     recordBtnDiv.className = 'record_btn_div';
     const recordBtnEdit = document.createElement('img');
