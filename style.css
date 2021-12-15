@@ -110,6 +110,10 @@ button:hover {
     justify-content: space-between;
 }
 
+#new_input_edit_date {
+    width: 45%;
+}
+
 .record_title_date {
     width: 45%;
 }
