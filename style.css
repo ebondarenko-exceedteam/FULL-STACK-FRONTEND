@@ -49,8 +49,21 @@ button {
     margin: 2px 0 2px;
 }
 
+.record_title_where {
+    width: 40%;
+}
+
+.record_title_date {
+    width: 25%;
+}
+
+.record_title_how_many {    
+    width: 25%;
+}
+
 .record_btn_div {
     display: flex;
+    width: 10%;
 }
 
 img {

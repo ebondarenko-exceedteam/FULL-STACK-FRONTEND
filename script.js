@@ -149,9 +149,14 @@ const render = () => {
     recordingDiv.className = 'recording_div';
     recordingDiv.id = `record_${index}`;
     const recordTitleWhere = document.createElement('p');
+    recordTitleWhere.className = 'record_title_where';
     recordTitleWhere.innerText = `${index + 1}) ${where}`;
+    const recordTitleDate = document.createElement('p');
+    recordTitleDate.innerText = date;
+    recordTitleDate.className = 'record_title_date';
     const recordTitleHowMany = document.createElement('p');
-    recordTitleHowMany.innerText = `${date} ${howMany} p.`;
+    recordTitleHowMany.className = 'record_title_how_many';
+    recordTitleHowMany.innerText = `${howMany} p.`;
     const recordBtnDiv = document.createElement('div');
     recordBtnDiv.className = 'record_btn_div';
     const recordBtnEdit = document.createElement('img');
@@ -167,6 +172,7 @@ const render = () => {
     recordBtnDiv.appendChild(recordBtnEdit);
     recordBtnDiv.appendChild(recordBtnDel);
     recordingDiv.appendChild(recordTitleWhere);
+    recordingDiv.appendChild(recordTitleDate);
     recordingDiv.appendChild(recordTitleHowMany);
     recordingDiv.appendChild(recordBtnDiv);
     recordingBlock.appendChild(recordingDiv);
