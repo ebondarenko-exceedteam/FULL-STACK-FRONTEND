@@ -151,6 +151,8 @@ const render = () => {
     const recordTitleWhere = document.createElement('p');
     recordTitleWhere.className = 'record_title_where';
     recordTitleWhere.innerText = `${index + 1}) ${where}`;
+    const recordTitleBox = document.createElement('div');
+    recordTitleBox.className = 'record_title_box';
     const recordTitleDate = document.createElement('p');
     recordTitleDate.innerText = date;
     recordTitleDate.className = 'record_title_date';
@@ -172,10 +174,10 @@ const render = () => {
     recordBtnDiv.appendChild(recordBtnEdit);
     recordBtnDiv.appendChild(recordBtnDel);
     recordingDiv.appendChild(recordTitleWhere);
-    recordingDiv.appendChild(recordTitleDate);
-    recordingDiv.appendChild(recordTitleHowMany);
-    recordingDiv.appendChild(recordBtnDiv);
+    recordTitleBox.appendChild(recordTitleDate);
+    recordTitleBox.appendChild(recordTitleHowMany);
+    recordTitleBox.appendChild(recordBtnDiv);
+    recordingDiv.appendChild(recordTitleBox);
     recordingBlock.appendChild(recordingDiv);
-    
   });
 }
