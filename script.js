@@ -170,7 +170,7 @@ const editTitleWhere = (index) => {
   newInputEditWhere.type = 'text';
   newInputEditWhere.value = recordingsArray[index].where;
   recordTitleWhere = recordingDiv.replaceChild(newInputEditWhere, recordTitleWhere);
-  newInputEditWhere.addEventListener('change', () => {
+  newInputEditWhere.addEventListener('blur', () => {
     newChangeInputWhere(event, index);
   })
 }
@@ -183,7 +183,7 @@ const editTitleDate = (index) => {
   newInputEditDate.id = 'new_input_edit_date';
   newInputEditDate.value = recordingsArray[index].date;
   recordTitleDate = recordTitleBox.replaceChild(newInputEditDate, recordTitleDate);
-  newInputEditDate.addEventListener('change', () => {
+  newInputEditDate.addEventListener('blur', () => {
     newChangeInputDate(event, index);
   })
 }
