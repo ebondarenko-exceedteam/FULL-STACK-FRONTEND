@@ -6,9 +6,9 @@ let resultSum = 0;
 let inputWhere = null;
 let inputHowMany = null;
 let today = new Date();
-let dd = String(today.getDate()).padStart(2, '0');
-let mm = String(today.getMonth() + 1).padStart(2, '0');
-let yyyy = today.getFullYear();
+const dd = String(today.getDate()).padStart(2, '0');
+const mm = String(today.getMonth() + 1).padStart(2, '0');
+const yyyy = today.getFullYear();
 today = `${dd}.${mm}.${yyyy}`;
 
 window.onload = async () => {
@@ -51,7 +51,7 @@ const addNewRecording = async () => {
   inputWhere.value = '';
   inputHowMany.value = '';
   render();
-}
+};
 
 const changeRecording = async (index) => {
   const { _id, howMany } = recordingsArray[index];
@@ -80,15 +80,14 @@ const closeRecording = () => {
   inputWhereValue = '';
   inputHowManyValue = '';
   render();
-}
+};
 
 const editRecording = (index) => {
   const { where, howMany } = recordingsArray[index];
   const activeRecording = document.getElementById(`record_${index}`)
   while (activeRecording.firstChild) {
     activeRecording.removeChild(activeRecording.firstChild);
-  }
-
+  };
   const editInputWhere = document.createElement('input');
   editInputWhere.id = 'input_edit_where';
   editInputWhere.type = 'text';
@@ -105,27 +104,24 @@ const editRecording = (index) => {
   editBtnEdit.src = 'img/done.svg';
   editBtnEdit.addEventListener('click', () => {
     changeRecording(index);
-  })
+  });
   const editBtnClose = document.createElement('img');
   editBtnClose.src = 'img/close.svg';
   editBtnClose.addEventListener('click', () => {
     closeRecording();
-  })
+  });
   editBtnDiv.appendChild(editBtnEdit);
   editBtnDiv.appendChild(editBtnClose);
   activeRecording.appendChild(editInputWhere);
   activeRecording.appendChild(editInputHowMany);
   activeRecording.appendChild(editBtnDiv);
-
-}
-
+};
 const deleteRecording = async (index) => {
   const resp = await fetch(`http://localhost:8800/deleteCharges?_id=${recordingsArray[index]._id}`, { method: 'DELETE'});
   const fetchResult = await resp.json();
   recordingsArray = fetchResult.data;
   render();
-}
-
+};
 const newChangeInputWhere = async (event, index) => {
   inputWhereValue = event.target.value;
   const resp = await fetch ('http://localhost:8800/updateCharges', {
@@ -143,7 +139,6 @@ const newChangeInputWhere = async (event, index) => {
   recordingsArray = fetchResult.data;
   render();
 };
-
 const newChangeInputDate = async (event, index) => {
   inputDateValue = event.target.value;
   const resp = await fetch ('http://localhost:8800/updateCharges', {
@@ -161,10 +156,9 @@ const newChangeInputDate = async (event, index) => {
   recordingsArray = fetchResult.data;
   render();
 };
-
 const editTitleWhere = (index) => {
   const recordingDiv = document.getElementById(`record_${index}`);
-  let recordTitleWhere = recordingDiv.firstChild;
+  const recordTitleWhere = recordingDiv.firstChild;
   const newInputEditWhere = document.createElement('input');
   newInputEditWhere.id = 'new_input_edit_where';
   newInputEditWhere.type = 'text';
@@ -172,12 +166,11 @@ const editTitleWhere = (index) => {
   recordTitleWhere = recordingDiv.replaceChild(newInputEditWhere, recordTitleWhere);
   newInputEditWhere.addEventListener('blur', () => {
     newChangeInputWhere(event, index);
-  })
-}
-
+  });
+};
 const editTitleDate = (index) => {
   const recordTitleBox = document.getElementById(`title_box_${index}`);
-  let recordTitleDate = recordTitleBox.firstChild;
+  const recordTitleDate = recordTitleBox.firstChild;
   const newInputEditDate = document.createElement('input');
   newInputEditDate.id = 'new_input_edit_date';
   newInputEditDate.id = 'new_input_edit_date';
@@ -185,11 +178,9 @@ const editTitleDate = (index) => {
   recordTitleDate = recordTitleBox.replaceChild(newInputEditDate, recordTitleDate);
   newInputEditDate.addEventListener('blur', () => {
     newChangeInputDate(event, index);
-  })
-}
-
+  });
+};
 const render = () => {
-  
   const resultBlock = document.querySelector('.result_block');
   while (resultBlock.firstChild) {
     resultBlock.removeChild(resultBlock.firstChild);
@@ -201,9 +192,8 @@ const render = () => {
   const resultTitle = document.createElement('p');
   resultTitle.className = 'result_title';
   resultSum = 0;
-  recordingsArray.forEach(item => {
-    resultSum += item.howMany
-  })
+  const initialValue = 0;
+  resultSum = recordingsArray.reduce((total, amount) => total + amount.howMany, initialValue);
   resultTitle.innerText = `Итого: ${resultSum} р.`;
   resultBlock.appendChild(resultTitle);
   recordingsArray.forEach((item, index) => {
@@ -235,12 +225,12 @@ const render = () => {
     recordBtnEdit.src = 'img/edit.svg';
     recordBtnEdit.addEventListener('click', () => {
       editRecording(index);
-    })
+    });
     const recordBtnDel = document.createElement('img');
     recordBtnDel.src = 'img/back.svg';
     recordBtnDel.addEventListener('click', () => {
       deleteRecording(index);
-    })
+    });
     recordBtnDiv.appendChild(recordBtnEdit);
     recordBtnDiv.appendChild(recordBtnDel);
     recordingDiv.appendChild(recordTitleWhere);
